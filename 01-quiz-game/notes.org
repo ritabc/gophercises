@@ -1,7 +1,0 @@
-Tasks
-* DONE Open CLI
-* close CLI iff all questions asked 
-* DONE Print text with constant value to CLI
-* DONE Add flag to CLI (perhaps filename of csv to parse) and print value of flag to CLI
-* Use csv pkg to print back first question of CSV
-* Wait for answer, then proceed to next question
