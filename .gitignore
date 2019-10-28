@@ -1,1 +1,11 @@
-*.org
+# Ignore notes.org notes files
+notes.org
+
+# Ignore anything without an extension
+[^\.]*
+
+# Unigore all dirs
+!*/
+
+# Unignore all files with an extension
+!*.*
