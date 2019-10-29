@@ -1,5 +1,4 @@
 # Ignore notes.org notes files
-notes.org
 
 # Ignore anything without an extension
 [^\.]*
