@@ -13,8 +13,8 @@ import (
 // http.Handler will be called instead.
 func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.HandlerFunc {
 	return func(resWriter http.ResponseWriter, req *http.Request) {
-		if long, ok := pathsToUrls[req.URL.String()]; ok {
-			http.Redirect(resWriter, req, long, http.StatusMovedPermanently)
+		if long, ok := pathsToUrls[req.URL.Path]; ok {
+			http.Redirect(resWriter, req, long, http.StatusFound)
 		} else {
 			fallback.ServeHTTP(resWriter, req)
 		}
