@@ -1,0 +1,13 @@
+* Major Tasks
+** DONE Pull in JSON as data
+** DONE parse JSON
+    - use encoding/json package
+** DONE display non-dynamic code on webpage
+    - use http.Handler instead of handle function (see gophercise 02)
+** TODO Use html/template  
+    - use html/template package (see gophercise 02)
+    - use https://www.youtube.com/watch?v=Uo9MSE2Gbzs
+    - maybe see https://www.youtube.com/watch?v=GnLHI_nekm8
+    - use story for 1 path
+** TODO Style 
+    - use bootstrap CDN
