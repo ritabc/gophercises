@@ -3,11 +3,16 @@
 ** DONE parse JSON
     - use encoding/json package
 ** DONE display non-dynamic code on webpage
-    - use http.Handler instead of handle function (see gophercise 02)
-** TODO Use html/template  
-    - use html/template package (see gophercise 02)
+** DONE Use html/template  
+    - use html/template package
     - use https://www.youtube.com/watch?v=Uo9MSE2Gbzs
     - maybe see https://www.youtube.com/watch?v=GnLHI_nekm8
-    - use story for 1 path
+** DONE escape text so that <undisclosed app> works
+** TODO Refactor: use http.Handler instead of handle function (see gophercise 02)
+** TODO Refactor: Templates file should not be in /main
 ** TODO Style 
     - use bootstrap CDN
+
+* Questions for When I Watch the Video:
+** handler instead of handle func?
+** data structure to pass into template's execute? 
