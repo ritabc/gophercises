@@ -1,11 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"gophercises/03-cyoa/cyoa"
-	"html/template"
-	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -23,36 +20,30 @@ func main() {
 	}
 	defer jsonFile.Close()
 
-	// Read JSON file
-	byteValue, err := ioutil.ReadAll(jsonFile)
+	arc, err := cyoa.JSONStory(jsonFile)
 	if err != nil {
-		fmt.Println("Error reading JSON file")
+		fmt.Println("Error Unmarshalling JSON")
 	}
 
-	// Unmarshal JSON data
-	var arc cyoa.Arc = make(map[cyoa.ShortTitle]cyoa.Scene)
-	err = json.Unmarshal(byteValue, &arc)
-	if err != nil {
-		fmt.Println("Error unmarshaling JSON data")
-	}
+	h := cyoa.NewHandler(arc)
+	fmt.Println("Starting the server on :8080")
+	http.ListenAndServe(":8080", h)
 
 	// Listen and Serve
-	for shortTitle, scene := range arc {
-		path := fmt.Sprintf("/%s", shortTitle)
-		currentScene := scene
-		http.HandleFunc(path, func(w http.ResponseWriter, req *http.Request) {
-			t, err := template.ParseFiles("../../template.html")
-			if err != nil {
-				fmt.Printf("Error parsing template: %s", err.Error())
-			}
-			err = t.Execute(w, currentScene)
-			if err != nil {
-				fmt.Printf("Error executing template: %s", err.Error())
-			}
-		})
-	}
-	fmt.Println("Starting the server on :8080")
-	http.ListenAndServe(":8080", nil)
+	// for shortTitle, scene := range arc {
+	// 	path := fmt.Sprintf("/%s", shortTitle)
+	// 	currentScene := scene
+	// 	http.HandleFunc(path, func(w http.ResponseWriter, req *http.Request) {
+	// 		t, err := template.ParseFiles("../../template.html")
+	// 		if err != nil {
+	// 			fmt.Printf("Error parsing template: %s", err.Error())
+	// 		}
+	// 		err = t.Execute(w, currentScene)
+	// 		if err != nil {
+	// 			fmt.Printf("Error executing template: %s", err.Error())
+	// 		}
+	// 	})
+	// }
 }
 
 // func cyoaHandler(arc cyoa.Arc) *http.ServeMux {
