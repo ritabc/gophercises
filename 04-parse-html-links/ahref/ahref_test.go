@@ -14,8 +14,8 @@ var testCases = []struct {
 		exFile: "./examples/one.html",
 		output: []Ahref{
 			{
-				href: "/other-page",
-				text: "A link to another page",
+				Href: "/other-page",
+				Text: "A link to another page",
 			},
 		},
 	},
@@ -23,12 +23,12 @@ var testCases = []struct {
 		exFile: "./examples/two.html",
 		output: []Ahref{
 			{
-				href: "https://www.twitter.com/joncalhoun",
-				text: "Check me out on twitter",
+				Href: "https://www.twitter.com/joncalhoun",
+				Text: "Check me out on twitter",
 			},
 			{
-				href: "https://github.com/gophercises",
-				text: "Gophercises is on Github!",
+				Href: "https://github.com/gophercises",
+				Text: "Gophercises is on Github!",
 			},
 		},
 	},
@@ -36,16 +36,16 @@ var testCases = []struct {
 		exFile: "./examples/three.html",
 		output: []Ahref{
 			{
-				href: "#",
-				text: "Login",
+				Href: "#",
+				Text: "Login",
 			},
 			{
-				href: "/lost",
-				text: "Lost? Need help?",
+				Href: "/lost",
+				Text: "Lost? Need help?",
 			},
 			{
-				href: "https://twitter.com/marcusolsson",
-				text: "@marcusolsson",
+				Href: "https://twitter.com/marcusolsson",
+				Text: "@marcusolsson",
 			},
 		},
 	},
@@ -53,8 +53,8 @@ var testCases = []struct {
 		exFile: "./examples/four.html",
 		output: []Ahref{
 			{
-				href: "/dog-cat",
-				text: "dog cat",
+				Href: "/dog-cat",
+				Text: "dog cat",
 			},
 		},
 	},
@@ -62,8 +62,8 @@ var testCases = []struct {
 		exFile: "./examples/five.html",
 		output: []Ahref{
 			{
-				href: "/dog",
-				text: "Something in a span IN A SPAN in a span Text not in a span Bold text!",
+				Href: "/dog",
+				Text: "Something in a span IN A SPAN in a span Text not in a span Bold text!",
 			},
 		},
 	},
@@ -79,7 +79,7 @@ func TestParseAhref(t *testing.T) {
 
 		links, err := ParseAhref(file)
 		if err != nil {
-			t.Errorf("Error parsing links: %s", err.Error())
+			t.Errorf("Error parsing file for links: %s", err.Error())
 		}
 
 		if !reflect.DeepEqual(test.output, links) {

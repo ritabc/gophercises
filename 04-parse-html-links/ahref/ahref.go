@@ -9,8 +9,8 @@ import (
 
 // Ahref is an <a> tag composed of link and text displayed
 type Ahref struct {
-	href string
-	text string
+	Href string
+	Text string
 }
 
 // ParseAhref should ultimately return []Ahref
@@ -30,8 +30,8 @@ func ParseAhref(file io.Reader) ([]Ahref, error) {
 					var out strings.Builder
 					getVisibleText(n, &out)
 					links = append(links, Ahref{
-						href: att.Val,
-						text: strings.TrimSpace(out.String()),
+						Href: att.Val,
+						Text: strings.TrimSpace(out.String()),
 					})
 				}
 			}
