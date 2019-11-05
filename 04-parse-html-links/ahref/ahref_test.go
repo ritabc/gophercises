@@ -1,31 +1,71 @@
 package ahref
 
 import (
-	"fmt"
-	"io/ioutil"
 	"os"
+	"reflect"
 	"testing"
 )
 
 var testCases = []struct {
 	exFile string
-	output Ahref
+	output []Ahref
 }{
 	{
 		exFile: "./examples/one.html",
-		output: Ahref{},
+		output: []Ahref{
+			{
+				href: "/other-page",
+				text: "A link to another page",
+			},
+		},
 	},
 	{
 		exFile: "./examples/two.html",
-		output: Ahref{},
+		output: []Ahref{
+			{
+				href: "https://www.twitter.com/joncalhoun",
+				text: "Check me out on twitter",
+			},
+			{
+				href: "https://github.com/gophercises",
+				text: "Gophercises is on Github!",
+			},
+		},
 	},
 	{
 		exFile: "./examples/three.html",
-		output: Ahref{},
+		output: []Ahref{
+			{
+				href: "#",
+				text: "Login",
+			},
+			{
+				href: "/lost",
+				text: "Lost? Need help?",
+			},
+			{
+				href: "https://twitter.com/marcusolsson",
+				text: "@marcusolsson",
+			},
+		},
 	},
 	{
 		exFile: "./examples/four.html",
-		output: Ahref{},
+		output: []Ahref{
+			{
+				href: "/dog-cat",
+				text: "dog cat",
+			},
+		},
+	},
+	{
+		exFile: "./examples/five.html",
+		output: []Ahref{
+			{
+				href: "/dog",
+				text: "Something in a span IN A SPAN in a span Text not in a span Bold text!",
+			},
+		},
 	},
 }
 
@@ -37,14 +77,13 @@ func TestParseAhref(t *testing.T) {
 		}
 		defer file.Close()
 
-		contents, err := ioutil.ReadAll(file)
+		links, err := ParseAhref(file)
 		if err != nil {
-			t.Errorf("Could not read file: %s\n", test.exFile)
+			t.Errorf("Error parsing links: %s", err.Error())
 		}
 
-		fmt.Printf("%s\n\n\n\n\n\n", string(contents))
-		if string(contents) != ParseAhref(string(contents)) {
-			t.Errorf("Not a match")
+		if !reflect.DeepEqual(test.output, links) {
+			t.Errorf("Expected output for file: %s was: %+v\n\nLinks found were: %+v", test.exFile, test.output, links)
 		}
 	}
 }

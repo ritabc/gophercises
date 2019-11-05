@@ -2,3 +2,7 @@
 ** TODO Make Test file first
     - table will contain filenames
     - get test to print contents of file
+** TODO Look at package html
+    - How can we use it? 
+    - See example
+    - plug, chug, debug
