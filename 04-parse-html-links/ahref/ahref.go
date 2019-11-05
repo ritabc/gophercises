@@ -13,22 +13,33 @@ type Ahref struct {
 	Text string
 }
 
-// ParseAhref should ultimately return []Ahref
+// ParseAhref reads from io.Reader and returns list of our link structs, along with error
 func ParseAhref(file io.Reader) ([]Ahref, error) {
 	var links []Ahref
 	doc, err := html.Parse(file)
 	if err != nil {
 		return nil, err
 	}
+	// Declare getLinks() function before defining so that definition doesn't see getLinks as undeclared
 	var getLinks func(*html.Node)
 	getLinks = func(n *html.Node) {
 		if n.Type == html.ElementNode && n.Data == "a" {
 			for _, att := range n.Attr {
 				if att.Key == "href" {
 
-					// don't use closures FOR NOW
 					var out strings.Builder
-					getVisibleText(n, &out)
+					var getVisibleText func(*html.Node)
+					getVisibleText = func(n *html.Node) {
+						for child := n.FirstChild; child != nil; child = child.NextSibling {
+							if child.Type == html.TextNode {
+								out.WriteString(child.Data)
+							}
+							getVisibleText(child)
+						}
+					}
+					// Actually make function call(s) and write to out
+					getVisibleText(n)
+
 					links = append(links, Ahref{
 						Href: att.Val,
 						Text: strings.TrimSpace(out.String()),
@@ -41,15 +52,5 @@ func ParseAhref(file io.Reader) ([]Ahref, error) {
 		}
 	}
 	getLinks(doc)
-
 	return links, nil
-}
-
-func getVisibleText(n *html.Node, out *strings.Builder) {
-	for child := n.FirstChild; child != nil; child = child.NextSibling {
-		if child.Type == html.TextNode {
-			out.WriteString(child.Data)
-		}
-		getVisibleText(child, out)
-	}
 }
