@@ -1,3 +1,4 @@
 * Tasks
 ** TODO Make Test file first
     - table will contain filenames
+    - get test to print contents of file
