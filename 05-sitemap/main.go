@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/xml"
 	"flag"
 	"fmt"
 	"gophercises/04-parse-html-links/ahref"
@@ -9,6 +10,16 @@ import (
 	"os"
 	"strings"
 )
+
+type Sitemap struct {
+	XMLName  xml.Name `xml:"urlset"`
+	Protocol string   `xml:"xmlns,attr"`
+	Sites    []URL
+}
+type URL struct {
+	XMLName  xml.Name `xml:"url"`
+	Location string   `xml:"loc"`
+}
 
 func main() {
 	// Setup flags with a default value
@@ -80,12 +91,16 @@ func main() {
 				}
 
 				// check if in allURLs already
-				if _, found := allURLs[url]; found {
+				_, found := allURLs[url]
+				if found {
 					continue
 				}
 
 				// If we get here, url needs to be added to our DSs
 				levelURLs = append(levelURLs, url)
+				if i == depth {
+					continue
+				}
 				allURLs[url] = true
 			}
 		}
@@ -95,13 +110,23 @@ func main() {
 		}
 		urlGraph[i+1] = levelURLs
 	}
-	fmt.Printf("All URLs Count: %v\n", len(allURLs))
-	for m, level := range urlGraph {
-		fmt.Println("Level: ", m)
-		for n, link := range level {
-			fmt.Printf("Link %v: %s\n", n, link)
-		}
+
+	// loop over allURLs map, compose Sitemap literal
+	sm := Sitemap{
+		Protocol: "http://www.sitemaps.org/schemas/sitemap/0.9",
 	}
+	for k, _ := range allURLs {
+		sm.Sites = append(sm.Sites, URL{
+			Location: k,
+		})
+	}
+	out, err := xml.MarshalIndent(sm, "", "    ")
+	if err != nil {
+		fmt.Println("Error marshalling sitemap into xml: ", err.Error())
+	}
+
+	// Print XML
+	fmt.Println(string(out))
 	os.Exit(0)
 }
 
