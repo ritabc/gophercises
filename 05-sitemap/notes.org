@@ -1,0 +1,18 @@
+* Tasks
+** DONE Implement flags
+** DONE Read up on standard XML protocol - output simple static XML
+** DONE Look into xml package
+** DONE Think about struct and tackling cyclical links
+** DONE Print HTML of page to console: How to get io.Reader with html from URL
+    - client makes get, receives response
+    - response.Body is io.ReadCloser
+** Think about pre-xml data structures:
+    - no need for tree struct
+    - just need flat slice of all urls (not even text is needed)
+** TODO Implement isDifferentDomain() func
+* TODO IFF implementing bonus (with depth flag), we need to:
+    - keep track of depth of each page 
+    - in this case, our flat slice of urls will only indirectly achieved
+    - our pre-XML data structure will be array of slices. 
+        - Len(array) = max depth
+        - each slice will contain all URLs found at that level
