@@ -59,6 +59,7 @@ func main() {
 
 			// Get response ƒrom URL GET Request
 			resp, err := http.Get(linkToFollow)
+			defer resp.Body.Close()
 			if err != nil {
 				fmt.Printf("Error performing GET request to: %v: %s", linkToFollow, err.Error())
 			}
@@ -126,6 +127,7 @@ func main() {
 	}
 
 	// Print XML
+	fmt.Println(xml.Header)
 	fmt.Println(string(out))
 	os.Exit(0)
 }
