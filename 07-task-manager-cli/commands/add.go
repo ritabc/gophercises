@@ -1,53 +1,25 @@
 package commands
 
 import (
-	"bytes"
-	"errors"
 	"fmt"
-	"strconv"
-	"time"
-
-	"github.com/boltdb/bolt"
+	"gophercises/07-task-manager-cli/db"
+	"os"
+	"strings"
 
 	"github.com/urfave/cli"
 )
 
-func addTask(c *cli.Context) error {
+func addTask(c *cli.Context) {
 	if c.NArg() == 0 {
-		return errors.New("missing task to add")
+		fmt.Println("missing task to add")
+		os.Exit(1)
 	}
-	var taskToAdd bytes.Buffer
-	for _, el := range c.Args() {
-		taskToAdd.WriteString(el)
-		taskToAdd.WriteString(" ")
-	}
-
-	db, err := bolt.Open("tasks.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
+	s := strings.Join(c.Args(), " ")
+	task, err := db.AddTask(s)
 	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	err = db.Update(func(tx *bolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte("todo"))
-		if err != nil {
-			return err
-		}
-		nextID, err := bucket.NextSequence()
-		if err != nil {
-			return err
-		}
-		taskID := []byte(strconv.Itoa(int(nextID)))
-
-		err = bucket.Put(taskID, taskToAdd.Bytes())
-
-		return nil
-	})
-
-	if err != nil {
-		return err
+		fmt.Println("Something went wrong:", err.Error())
+		os.Exit(1)
 	}
 
-	fmt.Printf("Added task: %v\n", taskToAdd.String())
-	return nil
+	fmt.Printf("Added task: '%s' with ID of %d\n", task.Value, task.Key)
 }

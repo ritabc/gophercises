@@ -8,3 +8,6 @@
 
 # Unignore all files with an extension
 !*.*
+
+# Ignore db files
+**.db

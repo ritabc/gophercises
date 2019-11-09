@@ -2,8 +2,12 @@ package main
 
 import (
 	"gophercises/07-task-manager-cli/commands"
+	"gophercises/07-task-manager-cli/db"
 	"log"
 	"os"
+	"path/filepath"
+
+	"github.com/mitchellh/go-homedir"
 
 	"github.com/urfave/cli"
 )
@@ -18,18 +22,20 @@ func info() {
 }
 
 func main() {
+	// setup app info and commands
 	info()
 	app.Commands = commands.GetAll()
 
-	err := app.Run(os.Args)
+	// set dbPath
+	home, _ := homedir.Dir()
+	dbPath := filepath.Join(home, "task.db")
+	err := db.Init(dbPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	err = app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
-
-/* Note that after building, if we run:
-$ ./task add task1
-Then these two expressions both produce 'task1'
-c.Args()[0]
-os.Args[2]
-*/

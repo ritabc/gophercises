@@ -12,7 +12,7 @@ import (
 func listDone(c *cli.Context) error {
 	fmt.Println("Your completed tasks: ")
 
-	db, err := bolt.Open("tasks.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
+	db, err := bolt.Open("task.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
 		return err
 	}

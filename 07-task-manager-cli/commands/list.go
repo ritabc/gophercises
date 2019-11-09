@@ -1,50 +1,22 @@
 package commands
 
 import (
-	"errors"
 	"fmt"
-	"time"
-
-	"github.com/boltdb/bolt"
+	"gophercises/07-task-manager-cli/db"
+	"os"
 
 	"github.com/urfave/cli"
 )
 
-func listTasks(c *cli.Context) error {
-	fmt.Println("Your listed tasks: ")
-
-	db, err := bolt.Open("tasks.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
+func listTasks(c *cli.Context) {
+	tasks, err := db.AllTasks()
 	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	// TODO: Initialize bucket in main or somewhere
-	// Perhaps use Store, aka struct that houses db for command package
-
-	var tasksToList []string
-
-	err = db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("todo"))
-		if bucket == nil {
-			return errors.New("bucket does not exist")
-		}
-		c := bucket.Cursor()
-
-		for k, v := c.First(); k != nil; k, v = c.Next() {
-			task := fmt.Sprintf("%s) %s\n", string(k), v)
-			tasksToList = append(tasksToList, task)
-		}
-		return nil
-	})
-
-	if err != nil {
-		return err
+		fmt.Println("Something went wrong:", err.Error())
+		os.Exit(1)
 	}
 
-	for _, task := range tasksToList {
-		fmt.Println(task)
+	fmt.Println("You have the following tasks:")
+	for _, task := range tasks {
+		fmt.Printf("%d) %s\n", task.Key, task.Value)
 	}
-
-	return nil
 }
