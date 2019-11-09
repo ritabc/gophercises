@@ -6,12 +6,11 @@ import (
 	"time"
 
 	"github.com/boltdb/bolt"
-
 	"github.com/urfave/cli"
 )
 
-func listTasks(c *cli.Context) error {
-	fmt.Println("Your listed tasks: ")
+func listCompleted(c *cli.Context) error {
+	fmt.Println("Your completed tasks: ")
 
 	db, err := bolt.Open("tasks.db", 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
@@ -19,13 +18,10 @@ func listTasks(c *cli.Context) error {
 	}
 	defer db.Close()
 
-	// TODO: Initialize bucket in main or somewhere
-	// Perhaps use Store, aka struct that houses db for command package
-
 	var tasksToList []string
 
 	err = db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("todo"))
+		bucket := tx.Bucket([]byte("done"))
 		if bucket == nil {
 			return errors.New("bucket does not exist")
 		}
@@ -47,4 +43,5 @@ func listTasks(c *cli.Context) error {
 	}
 
 	return nil
+
 }

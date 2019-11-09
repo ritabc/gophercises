@@ -1,10 +1,6 @@
 package commands
 
 import (
-	"errors"
-	"fmt"
-	"strconv"
-
 	"github.com/urfave/cli"
 )
 
@@ -27,17 +23,13 @@ func GetAll() []cli.Command {
 			Name:        "do",
 			Usage:       "task do 3",
 			Description: "Complete the task with the given id",
-			Action: func(c *cli.Context) error {
-				if c.NArg() != 1 {
-					return errors.New("cmd 'do' completes exacly 1 task, by id number")
-				}
-				id, err := strconv.Atoi(c.Args()[0])
-				if err != nil {
-					return fmt.Errorf("error converting '%s' into id or integer", c.Args()[0])
-				}
-				fmt.Printf("We should complete the task with id %d\n", id)
-				return nil
-			},
+			Action:      doTask,
+		},
+		{
+			Name:        "done",
+			Usage:       "task done",
+			Description: "List done tasks",
+			Action:      listDone,
 		},
 	}
 }

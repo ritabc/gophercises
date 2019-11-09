@@ -29,7 +29,7 @@ func addTask(c *cli.Context) error {
 	defer db.Close()
 
 	err = db.Update(func(tx *bolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte("tasks"))
+		bucket, err := tx.CreateBucketIfNotExists([]byte("todo"))
 		if err != nil {
 			return err
 		}
@@ -43,6 +43,10 @@ func addTask(c *cli.Context) error {
 
 		return nil
 	})
+
+	if err != nil {
+		return err
+	}
 
 	fmt.Printf("Added task: %v\n", taskToAdd.String())
 	return nil
