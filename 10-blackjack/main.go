@@ -68,7 +68,7 @@ func Shuffle(gs GameState) GameState {
 func Deal(gs GameState) GameState {
 	ret := clone(gs)
 	ret.Player = make(Hand, 0, 5)
-	ret.Player = make(Hand, 0, 5)
+	ret.Dealer = make(Hand, 0, 5)
 	var card deck.Card
 	for i := 0; i < 2; i++ {
 		card, ret.Deck = draw(ret.Deck)
@@ -76,7 +76,7 @@ func Deal(gs GameState) GameState {
 		card, ret.Deck = draw(ret.Deck)
 		ret.Dealer = append(ret.Dealer, card)
 	}
-	ret.State = int(StatePlayerTurn)
+	ret.State = StatePlayerTurn
 	return ret
 }
 
@@ -131,7 +131,7 @@ func main() {
 		gs = Deal(gs)
 
 		var input string
-		for input != "s" {
+		for gs.State == StatePlayerTurn {
 			fmt.Println("Player:", gs.Player)
 			fmt.Println("Dealer:", gs.Dealer.DealerString())
 			fmt.Println("What will you do? (h)it, (s)tand")
@@ -148,7 +148,7 @@ func main() {
 
 		// If dealer score <= 16, we hit
 		// If dealer has a soft 17 (score == 17 && minScore == 7)
-		for gs.State == int(StateDealerTurn) {
+		for gs.State == StateDealerTurn {
 			if gs.Dealer.Score() <= 16 || (gs.Dealer.Score() == 17 && gs.Dealer.MinScore() != 17) {
 				gs = Hit(gs)
 			} else {
@@ -175,16 +175,16 @@ const (
 
 type GameState struct {
 	Deck   []deck.Card
-	State  int
+	State  State
 	Player Hand
 	Dealer Hand
 }
 
 func (gs *GameState) CurrentPlayer() *Hand {
 	switch gs.State {
-	case int(StatePlayerTurn):
+	case StatePlayerTurn:
 		return &gs.Player
-	case int(StateDealerTurn):
+	case StateDealerTurn:
 		return &gs.Dealer
 	default:
 		panic("it isn't currently any player's turn")
